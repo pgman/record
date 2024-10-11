@@ -69,35 +69,7 @@ html {
 </style>
 <script>
 const localStrageKey = 'record-key';
-let records = [
-    {
-        begin: {
-            posession: 2500,
-            role: 0,
-        },
-        end: {
-            posession: 1250,
-            role: 114,
-        },
-    },
-    {
-        begin: {
-            posession: 3840,
-            role: 54,
-        },
-        end: {
-            posession: 3340,
-            role: 95,
-        },
-    },
-    {
-        begin: {
-            posession: 5280,
-            role: 54,
-        },
-        end: null,
-    },
-];
+let records = [];
 let selectedDisplay = 'none';
 let displayPosession = '02500'; 
 let displayRole = '0000'; 
@@ -276,7 +248,7 @@ function loadRecords() {
     }    
 }
 function updateView() {
-    const duration = 500;
+    const duration = 300;
     if(selectedDisplay === 'none') {
         $('#posession-display').removeClass('selected');
         $('#role-display').removeClass('selected');
