@@ -16,7 +16,7 @@ button {
     font-weight: bold;
     padding: 12px;
 }
-#start-button, #end-button, #reset-button {
+#start-button, #end-button, #hide-button, #reset-button {
     font-size: 64px;
     padding: 24px;
 }
@@ -34,6 +34,9 @@ html {
 }
 .mt-8 {
     margin-top: 8px;
+}
+#posession-input, #role-input, #number-input {
+    display: none;
 }
 #posession-input button {
     margin: 0px;
@@ -127,6 +130,11 @@ function attachEvents() {
         clickResetButton();
         selectedDisplay = 'none';
         saveRecords();
+        updateView();
+    });
+    $('#hide-button').click(() => {
+        resetDisplay();
+        selectedDisplay = 'none';
         updateView();
     });
     $(document).on('click', '.delete-button', e => {
@@ -372,6 +380,7 @@ function updateView() {
     <div>
         <button id="start-button">Start</button>&nbsp;
         <button id="end-button">End</button>&nbsp;
+        <button id="hide-button">Hide</button>&nbsp;&nbsp;&nbsp;
         <button id="reset-button">Reset</button>    
     </div>
     <div><span id="all-rate"></span></div>
