@@ -157,6 +157,7 @@ function clickPosessionButton(e) {
     const val = getValue(e.target.id);
     let currentVal = parseInt(preEditDisplay, 10);
     currentVal += val;
+    if(currentVal < 0) { currentVal = 0; }
     displayPosession = (currentVal + '').padStart(5, '0'); // to string
     preEditDisplay = displayPosession;
 }
@@ -164,6 +165,7 @@ function clickRoleButton(e) {
     const val = getValue(e.target.id);
     let currentVal = parseInt(preEditDisplay, 10);
     currentVal += val;
+    if(currentVal < 0) { currentVal = 0; }
     displayRole = (currentVal + '').padStart(4, '0'); // to string
     preEditDisplay = displayRole;
 }
