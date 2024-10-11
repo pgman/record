@@ -64,43 +64,141 @@ let records = [
     }
 ];
 let selectedDisplay = 'none';
+let displayPosession = '02345'; 
+let displayRole = '0345'; 
+let preEditDisplay = '';
 function init() {
     attachEvents();
     updateView();
 }
 function attachEvents() {
     $('#posession-display').click(() => {
-        selectedDisplay = 'posession';
+        resetDisplay();
+        selectPosession();        
         updateView();
     });
     $('#role-display').click(() => {
-        selectedDisplay = 'role';
+        resetDisplay();
+        selectRole();
         updateView();
     });
+    $('#posession-input button').click(e => {
+        clickPosessionButton(e);
+        updateView();
+    });
+    $('#role-input button').click(e => {
+        clickRoleButton(e);
+        updateView();
+    });
+    $('#number-input button').click(e => {
+        clickNumberButton(e);
+        updateView();
+    });
+}
+function resetDisplay() {
+    if(selectedDisplay === 'posession') {
+        displayPosession = preEditDisplay;
+    } else if(selectedDisplay === 'role') {
+        displayRole = preEditDisplay;
+    }
+}
+function selectPosession() {
+    if(selectedDisplay === 'posession') { return; }
+    selectedDisplay = 'posession';
+    preEditDisplay = displayPosession;
+}
+function selectRole() {
+    if(selectedDisplay === 'role') { return; }
+    selectedDisplay = 'role';
+    preEditDisplay = displayRole;
+}
+function clickPosessionButton(e) {
+    const val = getValue(e.target.id);
+    let currentVal = parseInt(preEditDisplay, 10);
+    currentVal += val;
+    displayPosession = (currentVal + '').padStart(5, '0'); // to string
+    preEditDisplay = displayPosession;
+}
+function clickRoleButton(e) {
+    const val = getValue(e.target.id);
+    let currentVal = parseInt(preEditDisplay, 10);
+    currentVal += val;
+    displayRole = (currentVal + '').padStart(4, '0'); // to string
+    preEditDisplay = displayRole;
+}
+function clickNumberButton(e) {
+    const splits = e.target.id.split('-');
+    if(splits.length !== 2) { throw 'fatal error.'; }
+    const val = parseInt(splits[0], 0);
+    let currentString;
+    if(selectedDisplay === 'posession') {
+        currentString = displayPosession;
+    } else if(selectedDisplay === 'role') {
+        currentString = displayRole;
+    } else {
+        throw 'fatal error.';
+    }
+    const astIndex = currentString.indexOf('*');
+    const editIndex = astIndex < 0 ? 0 : astIndex;
+    currentString = Array.from(currentString).map((e, i) => {
+        if(i === editIndex) { return val; }
+        else if(i === editIndex + 1) { return '*'; }
+        else { return e; }
+    }).join('');
+    if(selectedDisplay === 'posession') {
+        displayPosession = currentString;
+        if(editIndex === displayPosession.length - 1) {
+            console.log('finish');
+            preEditDisplay = displayPosession;
+        }        
+    } else if(selectedDisplay === 'role') {
+        displayRole = currentString;
+        if(editIndex === displayRole.length - 1) {
+            console.log('finish');
+            preEditDisplay = displayRole;
+        }   
+    } 
+}
+function getValue(buttonId) {
+    const splits = buttonId.split('-');
+    if(splits.length !== 3) { throw 'fatal error.'; }
+    let val = parseInt(splits[1], 0);
+    val *= splits[0] === 'plus' ? 1 : -1;
+    return val;
 }
 function updateView() {
     if(selectedDisplay === 'none') {
         $('#posession-display').removeClass('selected');
         $('#role-display').removeClass('selected');
+        $('#posession-input').hide();
+        $('#role-input').hide();
+        $('#number-input').hide();
     } else if(selectedDisplay === 'posession') {
         $('#posession-display').addClass('selected');
         $('#role-display').removeClass('selected');
+        $('#posession-input').show();
+        $('#role-input').hide();
+        $('#number-input').show();
     } else if(selectedDisplay === 'role') {
         $('#posession-display').removeClass('selected');
         $('#role-display').addClass('selected');
+        $('#posession-input').hide();
+        $('#role-input').show();
+        $('#number-input').show();
     }
+    $('#posession-span').text(displayPosession);
+    $('#role-span').text(displayRole);
 }
 </script>
 </head>
 <body>  
-    <button>Reset</button><br><br>
     <div id="posession-display" class="display">
-        <span class="display-title">Possession</span>
-        <span>12345</span>
+        <span class="display-title">Posession</span>
+        <span id="posession-span"></span>
     </div>
     <div id="role-display" class="display">
         <span class="display-title">Role</span>
-        <span>12345</span>
+        <span id="role-span">0345</span>
     </div>
     <div id="posession-input" class="mt-8">
         <div>
@@ -142,8 +240,8 @@ function updateView() {
             <button id="8-button">8</button>
             <button id="9-button">9</button>
         </div>
-        <button id="0-button">0</button>
-        
+        <button id="0-button">0</button>        
     </div>
+    <button>Reset</button><br>    
 </body>
 </html>
