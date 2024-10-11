@@ -4,14 +4,15 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
 .display {
-    font-size: 32px;
+    font-size: 48px;
+    font-weight: bold;
 }
 .display-title {
     display: inline-block;
-    width: 200px;
+    width: 280px;
 }
 button {
-    font-size: 32px;
+    font-size: 40px;
     font-weight: bold;
     padding: 12px;
 }
@@ -29,6 +30,24 @@ html {
 }
 .mt-8 {
     margin-top: 8px;
+}
+#posession-input button {
+    margin: 0px;
+    font-size: 48px;
+    width: 140px;
+    height: 140px;
+}
+#role-input button {
+    margin: 0px;
+    font-size: 56px;
+    width: 140px;
+    height: 140px;
+}
+#number-input button {
+    margin: 0px;
+    font-size: 64px;
+    width: 140px;
+    height: 140px;
 }
 </style>
 <script>
@@ -84,24 +103,47 @@ function updateView() {
         <span>12345</span>
     </div>
     <div id="posession-input" class="mt-8">
-        <button id="minus-125-button" class="minus">-125</button>
-        <button id="minus-250-button" class="minus">-250</button>
-        <button id="minus-500-button" class="minus">-500</button>
-        <button id="plus-125-button" class="plus">+125</button>
-        <button id="plus-250-button" class="plus">+250</button>
-        <button id="plus-500-button" class="plus">+500</button>
+        <div>
+            <button id="minus-125-button" class="minus">-125</button>
+            <button id="minus-250-button" class="minus">-250</button>
+            <button id="minus-500-button" class="minus">-500</button>
+        </div>
+        <div class="mt-8">
+            <button id="plus-125-button" class="plus">+125</button>
+            <button id="plus-250-button" class="plus">+250</button>
+            <button id="plus-500-button" class="plus">+500</button>
+        </div>        
     </div>
-    <div id="number-input" class="mt-8">
+    <div id="role-input" class="mt-8">
+        <div>
+            <button id="plus-1-button" class="plus">+1</button>
+            <button id="plus-5-button" class="plus">+5</button>
+            <button id="plus-10-button" class="plus">+10</button>
+        </div>
+        <div class="mt-8">
+            <button id="minus-1-button" class="minus">-1</button>
+            <button id="minus-5-button" class="minus">-5</button>
+            <button id="minus-10-button" class="minus">-10</button>
+        </div>        
+    </div>
+    <div id="number-input" class="mt-8">        
+        <div id="123-numbers">
+            <button id="1-button">1</button>
+            <button id="2-button">2</button>
+            <button id="3-button">3</button>
+        </div>
+        <div id="456-numbers">
+            <button id="4-button">4</button>
+            <button id="5-button">5</button>
+            <button id="6-button">6</button>
+        </div>
+        <div id="789-numbers">            
+            <button id="7-button">7</button>
+            <button id="8-button">8</button>
+            <button id="9-button">9</button>
+        </div>
         <button id="0-button">0</button>
-        <button id="1-button">1</button>
-        <button id="2-button">2</button>
-        <button id="3-button">3</button>
-        <button id="4-button">4</button>
-        <button id="5-button">5</button>
-        <button id="6-button">6</button>
-        <button id="7-button">7</button>
-        <button id="8-button">8</button>
-        <button id="9-button">9</button>
+        
     </div>
 </body>
 </html>
