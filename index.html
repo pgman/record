@@ -4,17 +4,21 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
 .display {
-    font-size: 48px;
+    font-size: 54px;
     font-weight: bold;
 }
 .display-title {
     display: inline-block;
-    width: 280px;
+    width: 360px;
 }
 button {
     font-size: 48px;
     font-weight: bold;
     padding: 12px;
+}
+#start-button, #end-button, #reset-button {
+    font-size: 64px;
+    padding: 24px;
 }
 .minus {
     background-color: lightblue;
@@ -99,8 +103,9 @@ let displayPosession = '02500';
 let displayRole = '0000'; 
 let preEditDisplay = '';
 /* TODO
-Delete button
-control show start end button
+データそのものを記憶。その時に名前を付けられるようにする
+そのロード時は一覧から選択できるようにする
+直近10個のみ記憶できるようにしておけば、消す手間がなくなる
 */
 function init() {
     loadRecords();
@@ -272,24 +277,25 @@ function loadRecords() {
     }    
 }
 function updateView() {
+    const duration = 500;
     if(selectedDisplay === 'none') {
         $('#posession-display').removeClass('selected');
         $('#role-display').removeClass('selected');
-        $('#posession-input').hide();
-        $('#role-input').hide();
-        $('#number-input').hide();
+        $('#posession-input').hide(duration);
+        $('#role-input').hide(duration);
+        $('#number-input').hide(duration);
     } else if(selectedDisplay === 'posession') {
         $('#posession-display').addClass('selected');
         $('#role-display').removeClass('selected');
-        $('#posession-input').show();
-        $('#role-input').hide();
-        $('#number-input').show();
+        $('#posession-input').show(duration);
+        $('#role-input').hide(duration);
+        $('#number-input').show(duration);
     } else if(selectedDisplay === 'role') {
         $('#posession-display').removeClass('selected');
         $('#role-display').addClass('selected');
-        $('#posession-input').hide();
-        $('#role-input').show();
-        $('#number-input').show();
+        $('#posession-input').hide(duration);
+        $('#role-input').show(duration);
+        $('#number-input').show(duration);
     }
     $('#posession-span').text(displayPosession);
     $('#role-span').text(displayRole);
