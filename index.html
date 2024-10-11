@@ -229,7 +229,7 @@ function clickDeleteButton(e) {
     const buttonId = e.target.id;
     const splits = buttonId.split('-');
     if(splits.length !== 3) { throw 'fatal error.'; }
-    let index = parseInt(splits[0], 10);
+    const index = parseInt(splits[0], 10);
     records.splice(index, 1);
 }
 function getValue(buttonId) {
