@@ -68,7 +68,7 @@ html {
 }
 </style>
 <script>
-$(init);
+const localStrageKey = 'record-key';
 let records = [
     {
         begin: {
@@ -102,6 +102,7 @@ let selectedDisplay = 'none';
 let displayPosession = '02500'; 
 let displayRole = '0000'; 
 let preEditDisplay = '';
+$(init);
 /* TODO
 データそのものを記憶。その時に名前を付けられるようにする
 そのロード時は一覧から選択できるようにする
@@ -265,13 +266,11 @@ function getValue(buttonId) {
     return val;
 }
 function saveRecords() {
-    const key = 'record-key';
     const json = JSON.stringify(records);
-    localStorage.setItem(key, json);
+    localStorage.setItem(localStrageKey, json);
 }
-function loadRecords() {
-    const key = 'record-key';
-    const val = localStorage.getItem(key);
+function loadRecords() {    
+    const val = localStorage.getItem(localStrageKey);
     if(val) {
         records = JSON.parse(val);
     }    
