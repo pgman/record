@@ -12,7 +12,7 @@
     width: 280px;
 }
 button {
-    font-size: 40px;
+    font-size: 48px;
     font-weight: bold;
     padding: 12px;
 }
@@ -49,6 +49,19 @@ html {
     width: 140px;
     height: 140px;
 }
+#record-table {
+    font-size: 40px;
+    border-collapse: collapse;
+}
+#all-rate {
+    font-size: 80px;
+    font-weight: bold;
+}
+#record-table th, #record-table td {
+    border: 2px solid #888;
+    text-align: center;
+    width: 140px;
+}
 </style>
 <script>
 $(init);
@@ -59,15 +72,38 @@ let records = [
             role: 0,
         },
         end: {
-
+            posession: 1250,
+            role: 114,
         },
-    }
+    },
+    {
+        begin: {
+            posession: 3840,
+            role: 54,
+        },
+        end: {
+            posession: 3340,
+            role: 95,
+        },
+    },
+    {
+        begin: {
+            posession: 5280,
+            role: 54,
+        },
+        end: null,
+    },
 ];
 let selectedDisplay = 'none';
-let displayPosession = '02345'; 
-let displayRole = '0345'; 
+let displayPosession = '02500'; 
+let displayRole = '0000'; 
 let preEditDisplay = '';
+/* TODO
+Delete button
+control show start end button
+*/
 function init() {
+    loadRecords();
     attachEvents();
     updateView();
 }
@@ -92,6 +128,33 @@ function attachEvents() {
     });
     $('#number-input button').click(e => {
         clickNumberButton(e);
+        updateView();
+    });
+    $('#start-button').click(() => {
+        resetDisplay();
+        clickStartButton();
+        selectedDisplay = 'none';
+        saveRecords();
+        updateView();
+    });
+    $('#end-button').click(() => {
+        resetDisplay();
+        clickEndButton();
+        selectedDisplay = 'none';
+        saveRecords();
+        updateView();
+    });
+    $('#reset-button').click(() => {
+        resetDisplay();
+        clickResetButton();
+        selectedDisplay = 'none';
+        saveRecords();
+        updateView();
+    });
+    $(document).on('click', '.delete-button', e => {
+        resetDisplay();
+        clickDeleteButton(e);
+        saveRecords();
         updateView();
     });
 }
@@ -159,12 +222,54 @@ function clickNumberButton(e) {
         }   
     } 
 }
+function clickStartButton() {
+    const record = {
+        begin: {
+            posession: parseInt(displayPosession, 10),
+            role: parseInt(displayRole, 10),
+        },
+        end: null,
+    };
+    if(records.length && records[records.length - 1].end === null) {
+        records[records.length - 1] = record;
+    } else {
+        records.push(record);
+    }
+}
+function clickEndButton() {
+    records[records.length - 1].end = {
+        posession: parseInt(displayPosession, 10),
+        role: parseInt(displayRole, 10),
+    };
+}
+function clickResetButton() {
+    records = [];
+}
+function clickDeleteButton(e) {
+    const buttonId = e.target.id;
+    const splits = buttonId.split('-');
+    if(splits.length !== 3) { throw 'fatal error.'; }
+    let index = parseInt(splits[0], 10);
+    records.splice(index, 1);
+}
 function getValue(buttonId) {
     const splits = buttonId.split('-');
     if(splits.length !== 3) { throw 'fatal error.'; }
-    let val = parseInt(splits[1], 0);
+    let val = parseInt(splits[1], 10);
     val *= splits[0] === 'plus' ? 1 : -1;
     return val;
+}
+function saveRecords() {
+    const key = 'record-key';
+    const json = JSON.stringify(records);
+    localStorage.setItem(key, json);
+}
+function loadRecords() {
+    const key = 'record-key';
+    const val = localStorage.getItem(key);
+    if(val) {
+        records = JSON.parse(val);
+    }    
 }
 function updateView() {
     if(selectedDisplay === 'none') {
@@ -188,6 +293,49 @@ function updateView() {
     }
     $('#posession-span').text(displayPosession);
     $('#role-span').text(displayRole);
+
+    // all rate
+    let allRateHtml = '--';
+    let posession = 0, role = 0;
+    for(let i = 0; i < records.length; i++) {
+        const { begin, end } = records[i];
+        // calc rate
+        if(end) {
+            role += (end.role - begin.role);
+            posession += (begin.posession - end.posession);
+        } 
+    }
+    if(posession) {
+        const rate = role / posession * 250;
+        allRateHtml = rate.toFixed(2);
+    }
+    $('#all-rate').html(allRateHtml);
+
+    // table
+    let recordHtml = '';
+    for(let i = records.length - 1; i >= 0; i--) {
+        const { begin, end } = records[i];
+        // calc rate
+        let rate = '--';
+        if(end) {
+            rate = (end.role - begin.role) / (begin.posession - end.posession) * 250;
+            rate = rate.toFixed(2);
+        } 
+        recordHtml += '<tr>';
+        recordHtml += `<td>${rate}</td>`;
+        recordHtml += `<td>${begin.posession}</td>`;
+        recordHtml += `<td>${begin.role}</td>`;
+        if(end) {
+            recordHtml += `<td>${end.posession}</td>`;
+            recordHtml += `<td>${end.role}</td>`;
+        } else {
+            recordHtml += `<td>${'--'}</td>`;
+            recordHtml += `<td>${'--'}</td>`;
+        }
+        recordHtml += `<td><button id="${i}-delete-button" class="delete-button">delete</button></td>`;
+        recordHtml += '</tr>';
+    }
+    $('#record-table tbody').html(recordHtml);
 }
 </script>
 </head>
@@ -242,6 +390,24 @@ function updateView() {
         </div>
         <button id="0-button">0</button>        
     </div>
-    <button>Reset</button><br>    
+    <div>
+        <button id="start-button">Start</button>&nbsp;
+        <button id="end-button">End</button>&nbsp;
+        <button id="reset-button">Reset</button>    
+    </div>
+    <div><span id="all-rate"></span></div>
+    <div class="mt-8">
+        <table id="record-table">
+            <thead>
+                <tr>
+                    <th>avg</th>
+                    <th colspan="2">start</th>
+                    <th colspan="2">end</th>
+                    <th>delete</th>
+                </tr> 
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </body>
 </html>
