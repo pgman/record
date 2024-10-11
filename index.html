@@ -2,13 +2,106 @@
 <html>
 <head>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<style>
+.display {
+    font-size: 32px;
+}
+.display-title {
+    display: inline-block;
+    width: 200px;
+}
+button {
+    font-size: 32px;
+    font-weight: bold;
+    padding: 12px;
+}
+.minus {
+    background-color: lightblue;
+}
+.plus {
+    background-color: salmon;
+}
+.selected {
+    background-color: yellow;
+}
+html {
+  touch-action: manipulation;
+}
+.mt-8 {
+    margin-top: 8px;
+}
+</style>
 <script>
-document.addEventListener('DOMContentLoaded', init);
+$(init);
+let records = [
+    {
+        begin: {
+            posession: 2500,
+            role: 0,
+        },
+        end: {
+
+        },
+    }
+];
+let selectedDisplay = 'none';
 function init() {
-    console.log('test'); // upload test
+    attachEvents();
+    updateView();
+}
+function attachEvents() {
+    $('#posession-display').click(() => {
+        selectedDisplay = 'posession';
+        updateView();
+    });
+    $('#role-display').click(() => {
+        selectedDisplay = 'role';
+        updateView();
+    });
+}
+function updateView() {
+    if(selectedDisplay === 'none') {
+        $('#posession-display').removeClass('selected');
+        $('#role-display').removeClass('selected');
+    } else if(selectedDisplay === 'posession') {
+        $('#posession-display').addClass('selected');
+        $('#role-display').removeClass('selected');
+    } else if(selectedDisplay === 'role') {
+        $('#posession-display').removeClass('selected');
+        $('#role-display').addClass('selected');
+    }
 }
 </script>
 </head>
 <body>  
+    <button>Reset</button><br><br>
+    <div id="posession-display" class="display">
+        <span class="display-title">Possession</span>
+        <span>12345</span>
+    </div>
+    <div id="role-display" class="display">
+        <span class="display-title">Role</span>
+        <span>12345</span>
+    </div>
+    <div id="posession-input" class="mt-8">
+        <button id="minus-125-button" class="minus">-125</button>
+        <button id="minus-250-button" class="minus">-250</button>
+        <button id="minus-500-button" class="minus">-500</button>
+        <button id="plus-125-button" class="plus">+125</button>
+        <button id="plus-250-button" class="plus">+250</button>
+        <button id="plus-500-button" class="plus">+500</button>
+    </div>
+    <div id="number-input" class="mt-8">
+        <button id="0-button">0</button>
+        <button id="1-button">1</button>
+        <button id="2-button">2</button>
+        <button id="3-button">3</button>
+        <button id="4-button">4</button>
+        <button id="5-button">5</button>
+        <button id="6-button">6</button>
+        <button id="7-button">7</button>
+        <button id="8-button">8</button>
+        <button id="9-button">9</button>
+    </div>
 </body>
 </html>
