@@ -4,7 +4,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
 .display {
-    font-size: 54px;
+    font-size: 64px;
     font-weight: bold;
 }
 .display-title {
@@ -234,7 +234,9 @@ function clickEndButton() {
     };
 }
 function clickResetButton() {
-    records = [];
+    if(confirm('Do you want to reset?')) {
+        records = [];
+    }    
 }
 function clickDeleteButton(e) {
     const buttonId = e.target.id;
@@ -268,18 +270,21 @@ function updateView() {
         $('#posession-input').hide(duration);
         $('#role-input').hide(duration);
         $('#number-input').hide(duration);
+        $('#start-button, #end-button').hide(duration);
     } else if(selectedDisplay === 'posession') {
         $('#posession-display').addClass('selected');
         $('#role-display').removeClass('selected');
         $('#posession-input').show(duration);
         $('#role-input').hide(duration);
         $('#number-input').show(duration);
+        $('#start-button, #end-button').show(duration);
     } else if(selectedDisplay === 'role') {
         $('#posession-display').removeClass('selected');
         $('#role-display').addClass('selected');
         $('#posession-input').hide(duration);
         $('#role-input').show(duration);
         $('#number-input').show(duration);
+        $('#start-button, #end-button').show(duration);
     }
     $('#posession-span').text(displayPosession);
     $('#role-span').text(displayRole);
