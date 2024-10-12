@@ -16,6 +16,9 @@ button {
     font-weight: bold;
     padding: 12px;
 }
+#start-button, #end-button {
+    width: 800px;
+}
 #start-button, #end-button, #hide-button, #reset-button {
     font-size: 64px;
     padding: 24px;
@@ -378,10 +381,14 @@ function updateView() {
         <button id="0-button">0</button>        
     </div>
     <div>
-        <button id="start-button">Start</button>&nbsp;
-        <button id="end-button">End</button>&nbsp;
-        <button id="hide-button">Hide</button>&nbsp;&nbsp;&nbsp;
-        <button id="reset-button">Reset</button>    
+        <div>
+            <div><button id="end-button">End</button></div>            
+            <div class="mt-8"><button id="start-button">Start</button></div>
+        </div>
+        <div class="mt-8">  
+            <button id="hide-button">Hide</button>&nbsp;&nbsp;&nbsp;
+            <button id="reset-button">Reset</button>    
+        </div>
     </div>
     <div><span id="all-rate"></span></div>
     <div class="mt-8">
