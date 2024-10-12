@@ -12,6 +12,9 @@
 #role-input {
     width: 240px;
 }
+#over-input {
+    width: 240px;
+}
 button {
     font-size: 48px;
     font-weight: bold;
@@ -64,6 +67,10 @@ function init() {
     updateView();
 }
 function attachEvents() {
+    $('#over-input').change(() => {
+        saveRecords();
+        updateView();
+    });
     $('#start-button').click(() => {
         clickStartButton();
         saveRecords();
@@ -87,6 +94,18 @@ function attachEvents() {
 }
 function checkInputs() {
     return $('#posession-input').val() === '' || $('#role-input').val() === '';
+}
+function toggleEnabled() {
+    if(records.length === 0) {
+        $('#start-button').prop('disabled', false);
+        $('#end-button').prop('disabled', true);
+    } else if(!records[records.length - 1].end) {
+        $('#start-button').prop('disabled', true);
+        $('#end-button').prop('disabled', false);
+    } else{
+        $('#start-button').prop('disabled', false);
+        $('#end-button').prop('disabled', false);
+    }
 }
 function clickStartButton() {
     if(checkInputs()) {
@@ -141,6 +160,7 @@ function loadRecords() {
     }    
 }
 function updateView() {
+    toggleEnabled();
     // all rate
     let allRateHtml = '--';
     let posession = 0, role = 0;
@@ -153,8 +173,12 @@ function updateView() {
         } 
     }
     if(posession) {
-        const rate = role / posession * 250;
-        allRateHtml = rate.toFixed(2);
+        // add role
+        let over = parseInt($('#over-input').val());
+        if(isNaN(over)) { over = 0; }
+        const rate = (role + over) / posession * 250;
+        allRateHtml = rate.toFixed(2);        
+        allRateHtml += ` (${role} roles)`;
     }
     $('#all-rate').html(allRateHtml);
 
@@ -167,7 +191,7 @@ function updateView() {
         if(end) {
             rate = (end.role - begin.role) / (begin.posession - end.posession) * 250;
             rate = rate.toFixed(2);
-        } 
+        }         
         recordHtml += '<tr>';
         recordHtml += `<td>${rate}</td>`;
         recordHtml += `<td>${begin.posession}</td>`;
@@ -189,6 +213,7 @@ function updateView() {
 <body>  
     <input id="posession-input" class="number-input" type="number" min="-999999" max="999999"/>
     <input id="role-input" class="number-input ml-8" type="number" min="0" max="9999"/>
+    <input id="over-input" class="number-input ml-8" type="number" min="0" max="9999"/>
     <div class="mt-8">
         <button id="start-button">Start</button>
         <button id="end-button">End</button>
