@@ -3,24 +3,23 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
-.display {
-    font-size: 64px;
-    font-weight: bold;
+.number-input {
+    font-size: 80px;
 }
-.display-title {
-    display: inline-block;
-    width: 360px;
+#posession-input {
+    width: 320px;
+}
+#role-input {
+    width: 240px;
 }
 button {
     font-size: 48px;
     font-weight: bold;
     padding: 12px;
 }
-#start-button, #end-button {
-    width: 800px;
-}
-#start-button, #end-button, #hide-button, #reset-button {
+#start-button, #end-button, #reset-button {
     font-size: 64px;
+    width: 260px;
     padding: 24px;
 }
 .minus {
@@ -38,26 +37,8 @@ html {
 .mt-8 {
     margin-top: 8px;
 }
-#posession-input, #role-input, #number-input {
-    display: none;
-}
-#posession-input button {
-    margin: 0px;
-    font-size: 48px;
-    width: 140px;
-    height: 140px;
-}
-#role-input button {
-    margin: 0px;
-    font-size: 56px;
-    width: 140px;
-    height: 140px;
-}
-#number-input button {
-    margin: 0px;
-    font-size: 64px;
-    width: 140px;
-    height: 140px;
+.ml-8 {
+    margin-left: 8px;
 }
 #record-table {
     font-size: 40px;
@@ -76,148 +57,46 @@ html {
 <script>
 const localStrageKey = 'record-key';
 let records = [];
-let selectedDisplay = 'none';
-let displayPosession = '02500'; 
-let displayRole = '0000'; 
-let preEditDisplay = '';
 $(init);
-/* TODO
-データそのものを記憶。その時に名前を付けられるようにする
-そのロード時は一覧から選択できるようにする
-直近10個のみ記憶できるようにしておけば、消す手間がなくなる
-*/
 function init() {
     loadRecords();
     attachEvents();
     updateView();
 }
 function attachEvents() {
-    $('#posession-display').click(() => {
-        resetDisplay();
-        selectPosession();        
-        updateView();
-    });
-    $('#role-display').click(() => {
-        resetDisplay();
-        selectRole();
-        updateView();
-    });
-    $('#posession-input button').click(e => {
-        clickPosessionButton(e);
-        updateView();
-    });
-    $('#role-input button').click(e => {
-        clickRoleButton(e);
-        updateView();
-    });
-    $('#number-input button').click(e => {
-        clickNumberButton(e);
-        updateView();
-    });
     $('#start-button').click(() => {
-        resetDisplay();
         clickStartButton();
-        selectedDisplay = 'none';
         saveRecords();
         updateView();
     });
     $('#end-button').click(() => {
-        resetDisplay();
         clickEndButton();
-        selectedDisplay = 'none';
         saveRecords();
         updateView();
     });
     $('#reset-button').click(() => {
-        resetDisplay();
         clickResetButton();
-        selectedDisplay = 'none';
         saveRecords();
         updateView();
     });
-    $('#hide-button').click(() => {
-        resetDisplay();
-        selectedDisplay = 'none';
-        updateView();
-    });
     $(document).on('click', '.delete-button', e => {
-        resetDisplay();
         clickDeleteButton(e);
         saveRecords();
         updateView();
     });
 }
-function resetDisplay() {
-    if(selectedDisplay === 'posession') {
-        displayPosession = preEditDisplay;
-    } else if(selectedDisplay === 'role') {
-        displayRole = preEditDisplay;
-    }
-}
-function selectPosession() {
-    if(selectedDisplay === 'posession') { return; }
-    selectedDisplay = 'posession';
-    preEditDisplay = displayPosession;
-}
-function selectRole() {
-    if(selectedDisplay === 'role') { return; }
-    selectedDisplay = 'role';
-    preEditDisplay = displayRole;
-}
-function clickPosessionButton(e) {
-    const val = getValue(e.target.id);
-    let currentVal = parseInt(preEditDisplay, 10);
-    currentVal += val;
-    if(currentVal < 0) { currentVal = 0; }
-    displayPosession = (currentVal + '').padStart(5, '0'); // to string
-    preEditDisplay = displayPosession;
-}
-function clickRoleButton(e) {
-    const val = getValue(e.target.id);
-    let currentVal = parseInt(preEditDisplay, 10);
-    currentVal += val;
-    if(currentVal < 0) { currentVal = 0; }
-    displayRole = (currentVal + '').padStart(4, '0'); // to string
-    preEditDisplay = displayRole;
-}
-function clickNumberButton(e) {
-    const splits = e.target.id.split('-');
-    if(splits.length !== 2) { throw 'fatal error.'; }
-    const val = parseInt(splits[0], 0);
-    let currentString;
-    if(selectedDisplay === 'posession') {
-        currentString = displayPosession;
-    } else if(selectedDisplay === 'role') {
-        currentString = displayRole;
-    } else {
-        throw 'fatal error.';
-    }
-    const astIndex = currentString.indexOf('*');
-    const editIndex = astIndex < 0 ? 0 : astIndex;
-    currentString = Array.from(currentString).map((e, i) => {
-        if(i === editIndex) { return val; }
-        else if(i === editIndex + 1) { return '*'; }
-        else { return e; }
-    }).join('');
-    if(selectedDisplay === 'posession') {
-        displayPosession = currentString;
-        if(editIndex === displayPosession.length - 1) {
-            console.log('finish');
-            preEditDisplay = displayPosession;
-        }        
-    } else if(selectedDisplay === 'role') {
-        displayRole = currentString;
-        if(editIndex === displayRole.length - 1) {
-            console.log('finish');
-            preEditDisplay = displayRole;
-        }   
-    } 
+function checkInputs() {
+    return $('#posession-input').val() === '' || $('#role-input').val() === '';
 }
 function clickStartButton() {
+    if(checkInputs()) {
+        alert('No input.');
+        return;
+    }
     const record = {
         begin: {
-            posession: parseInt(displayPosession, 10),
-            role: parseInt(displayRole, 10),
+            posession: parseInt($('#posession-input').val(), 10),
+            role: parseInt($('#role-input').val(), 10),
         },
         end: null,
     };
@@ -228,10 +107,14 @@ function clickStartButton() {
     }
 }
 function clickEndButton() {
+    if(checkInputs()) {
+        alert('No input.');
+        return;
+    }
     if(!records.length) { return; }
     records[records.length - 1].end = {
-        posession: parseInt(displayPosession, 10),
-        role: parseInt(displayRole, 10),
+        posession: parseInt($('#posession-input').val(), 10),
+        role: parseInt($('#role-input').val(), 10),
     };
 }
 function clickResetButton() {
@@ -240,18 +123,12 @@ function clickResetButton() {
     }    
 }
 function clickDeleteButton(e) {
+    if(!confirm('Do you want to delete?')) { return; }
     const buttonId = e.target.id;
     const splits = buttonId.split('-');
     if(splits.length !== 3) { throw 'fatal error.'; }
     const index = parseInt(splits[0], 10);
     records.splice(index, 1);
-}
-function getValue(buttonId) {
-    const splits = buttonId.split('-');
-    if(splits.length !== 3) { throw 'fatal error.'; }
-    let val = parseInt(splits[1], 10);
-    val *= splits[0] === 'plus' ? 1 : -1;
-    return val;
 }
 function saveRecords() {
     const json = JSON.stringify(records);
@@ -264,32 +141,6 @@ function loadRecords() {
     }    
 }
 function updateView() {
-    const duration = 300;
-    if(selectedDisplay === 'none') {
-        $('#posession-display').removeClass('selected');
-        $('#role-display').removeClass('selected');
-        $('#posession-input').hide(duration);
-        $('#role-input').hide(duration);
-        $('#number-input').hide(duration);
-        $('#start-button, #end-button').hide(duration);
-    } else if(selectedDisplay === 'posession') {
-        $('#posession-display').addClass('selected');
-        $('#role-display').removeClass('selected');
-        $('#posession-input').show(duration);
-        $('#role-input').hide(duration);
-        $('#number-input').show(duration);
-        $('#start-button, #end-button').show(duration);
-    } else if(selectedDisplay === 'role') {
-        $('#posession-display').removeClass('selected');
-        $('#role-display').addClass('selected');
-        $('#posession-input').hide(duration);
-        $('#role-input').show(duration);
-        $('#number-input').show(duration);
-        $('#start-button, #end-button').show(duration);
-    }
-    $('#posession-span').text(displayPosession);
-    $('#role-span').text(displayRole);
-
     // all rate
     let allRateHtml = '--';
     let posession = 0, role = 0;
@@ -336,65 +187,12 @@ function updateView() {
 </script>
 </head>
 <body>  
-    <div id="posession-display" class="display">
-        <span class="display-title">Posession</span>
-        <span id="posession-span"></span>
-    </div>
-    <div id="role-display" class="display">
-        <span class="display-title">Role</span>
-        <span id="role-span">0345</span>
-    </div>
-    <div id="posession-input" class="mt-8">
-        <div>
-            <button id="minus-125-button" class="minus">-125</button>
-            <button id="minus-250-button" class="minus">-250</button>
-            <button id="minus-500-button" class="minus">-500</button>
-        </div>
-        <div class="mt-8">
-            <button id="plus-125-button" class="plus">+125</button>
-            <button id="plus-250-button" class="plus">+250</button>
-            <button id="plus-500-button" class="plus">+500</button>
-        </div>        
-    </div>
-    <div id="role-input" class="mt-8">
-        <div>
-            <button id="plus-1-button" class="plus">+1</button>
-            <button id="plus-5-button" class="plus">+5</button>
-            <button id="plus-10-button" class="plus">+10</button>
-        </div>
-        <div class="mt-8">
-            <button id="minus-1-button" class="minus">-1</button>
-            <button id="minus-5-button" class="minus">-5</button>
-            <button id="minus-10-button" class="minus">-10</button>
-        </div>        
-    </div>
-    <div id="number-input" class="mt-8">        
-        <div id="123-numbers">
-            <button id="1-button">1</button>
-            <button id="2-button">2</button>
-            <button id="3-button">3</button>
-        </div>
-        <div id="456-numbers">
-            <button id="4-button">4</button>
-            <button id="5-button">5</button>
-            <button id="6-button">6</button>
-        </div>
-        <div id="789-numbers">            
-            <button id="7-button">7</button>
-            <button id="8-button">8</button>
-            <button id="9-button">9</button>
-        </div>
-        <button id="0-button">0</button>        
-    </div>
+    <input id="posession-input" class="number-input" type="number" min="-999999" max="999999"/>
+    <input id="role-input" class="number-input ml-8" type="number" min="0" max="9999"/>
     <div class="mt-8">
-        <div>
-            <div><button id="end-button">End</button></div>            
-            <div class="mt-8"><button id="start-button">Start</button></div>
-        </div>
-        <div class="mt-8">  
-            <button id="hide-button">Hide</button>&nbsp;&nbsp;&nbsp;
-            <button id="reset-button">Reset</button>    
-        </div>
+        <button id="start-button">Start</button>
+        <button id="end-button">End</button>
+        <button id="reset-button">Reset</button>
     </div>
     <div><span id="all-rate"></span></div>
     <div class="mt-8">
