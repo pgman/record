@@ -228,6 +228,7 @@ function clickStartButton() {
     }
 }
 function clickEndButton() {
+    if(!records.length) { return; }
     records[records.length - 1].end = {
         posession: parseInt(displayPosession, 10),
         role: parseInt(displayRole, 10),
