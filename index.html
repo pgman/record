@@ -28,6 +28,12 @@ button {
     font-weight: bold;
     padding: 12px;
 }
+.big-number {
+    font-size: 80px;
+}
+.small-number {
+    font-size: 40px;
+}
 #start-button, #end-button, #reset-button {
     font-size: 64px;
     font-weight: bold;
@@ -266,24 +272,24 @@ function updateView() {
     <input id="role-input" class="number-input ml-8" type="number" value="0" min="0" max="9999"/>
     <input id="over-input" class="number-input ml-8" type="number" value="0" min="0" max="9999"/>
     <div class="mt-8">        
-        <button id="minus-125-posession-button" class="minus number-button">-125</button>
-        <button id="minus-250-posession-button" class="minus number-button">-250</button>
-        <button id="minus-500-posession-button" class="minus number-button">-500</button>
-        <button id="plus-125-posession-button" class="plus number-button">+125</button>
-        <button id="plus-250-posession-button" class="plus number-button">+250</button>
-        <button id="plus-500-posession-button" class="plus number-button">+500</button>
+        <button id="minus-125-posession-button" class="minus number-button big-number">-125</button>
+        <button id="minus-250-posession-button" class="minus number-button big-number">-250</button>
+        <button id="minus-500-posession-button" class="minus number-button big-number">-500</button>
+        <button id="plus-125-posession-button" class="plus number-button small-number">+125</button>
+        <button id="plus-250-posession-button" class="plus number-button small-number">+250</button>
+        <button id="plus-500-posession-button" class="plus number-button small-number">+500</button>
     </div>
     <div class="mt-8">
-        <button id="plus-1-role-button" class="plus number-button">+1</button>
-        <button id="plus-5-role-button" class="plus number-button">+5</button>
-        <button id="plus-10-role-button" class="plus number-button">+10</button>
-        <button id="minus-1-role-button" class="minus number-button">-1</button>
-        <button id="minus-5-role-button" class="minus number-button">-5</button>
-        <button id="minus-10-role-button" class="minus number-button">-10</button>
+        <button id="plus-1-role-button" class="plus number-button big-number">+1</button>
+        <button id="plus-5-role-button" class="plus number-button big-number">+5</button>
+        <button id="plus-10-role-button" class="plus number-button big-number">+10</button>
+        <button id="minus-1-role-button" class="minus number-button small-number">-1</button>
+        <button id="minus-5-role-button" class="minus number-button small-number">-5</button>
+        <button id="minus-10-role-button" class="minus number-button small-number">-10</button>
     </div>
     <div class="mt-8">
-        <button id="plus-1-over-button" class="plus number-button">+1</button>
-        <button id="minus-1-over-button" class="minus number-button">-1</button>
+        <button id="plus-1-over-button" class="plus number-button big-number">+1</button>
+        <button id="minus-1-over-button" class="minus number-button small-number">-1</button>
     </div>
     <div class="mt-8">
         <button id="start-button">Start</button>
