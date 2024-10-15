@@ -20,10 +20,21 @@ button {
     font-weight: bold;
     padding: 12px;
 }
+.number-button {
+    font-size: 52px;
+    font-weight: bold;
+    padding: 12px;
+}
 #start-button, #end-button, #reset-button {
     font-size: 64px;
+    font-weight: bold;
     width: 260px;
     padding: 24px;
+}
+.delete-button {
+    font-size: 48px;
+    font-weight: bold;
+    padding: 12px;
 }
 .minus {
     background-color: lightblue;
@@ -42,6 +53,9 @@ html {
 }
 .ml-8 {
     margin-left: 8px;
+}
+.ml-24 {
+    margin-left: 24px;
 }
 #record-table {
     font-size: 40px;
@@ -68,6 +82,11 @@ function init() {
 }
 function attachEvents() {
     $('#over-input').change(() => {
+        saveRecords();
+        updateView();
+    });
+    $('.number-button').click(e => {
+        clickNumberButton(e);
         saveRecords();
         updateView();
     });
@@ -106,6 +125,18 @@ function toggleEnabled() {
         $('#start-button').prop('disabled', false);
         $('#end-button').prop('disabled', false);
     }
+}
+function clickNumberButton(e) {
+    const targetId = e.target.id;
+    const splits = targetId.split('-');
+    if(splits.length !== 4) { throw 'Fatal error.'; }
+    const sign = splits[0];
+    const val = sign === 'plus' ? parseInt(splits[1]) : -parseInt(splits[1]);
+    const type = splits[2];
+    const selector = `#${type}-input`;
+    let input = getNumber(selector);
+    input += val;
+    $(selector).val(input + '');
 }
 function clickStartButton() {
     if(checkInputs()) {
@@ -150,14 +181,23 @@ function clickDeleteButton(e) {
     records.splice(index, 1);
 }
 function saveRecords() {
-    const json = JSON.stringify(records);
+    const json = JSON.stringify({ records, over: getNumber('#over-input'), });
     localStorage.setItem(localStrageKey, json);
 }
 function loadRecords() {    
     const val = localStorage.getItem(localStrageKey);
     if(val) {
-        records = JSON.parse(val);
+        const obj = JSON.parse(val);
+        if(obj.records && obj.over) {
+            records = obj.records;
+            $('#over-input').val(obj.over + '');
+        }        
     }    
+}
+function getNumber(selector) {
+    let over = parseInt($(selector).val());
+    if(isNaN(over)) { over = 0; }
+    return over;
 }
 function updateView() {
     toggleEnabled();
@@ -174,8 +214,7 @@ function updateView() {
     }
     if(posession) {
         // add role
-        let over = parseInt($('#over-input').val());
-        if(isNaN(over)) { over = 0; }
+        const over = getNumber('#over-input');
         const rate = (role + over) / posession * 250;
         allRateHtml = rate.toFixed(2);        
         allRateHtml += ` (${role} roles)`;
@@ -211,9 +250,29 @@ function updateView() {
 </script>
 </head>
 <body>  
-    <input id="posession-input" class="number-input" type="number" min="-999999" max="999999"/>
-    <input id="role-input" class="number-input ml-8" type="number" min="0" max="9999"/>
-    <input id="over-input" class="number-input ml-8" type="number" min="0" max="9999"/>
+    <input id="posession-input" class="number-input" type="number" value="2500" min="-999999" max="999999"/>
+    <input id="role-input" class="number-input ml-8" type="number" value="0" min="0" max="9999"/>
+    <input id="over-input" class="number-input ml-8" type="number" value="0" min="0" max="9999"/>
+    <div class="mt-8">
+        <button id="plus-125-posession-button" class="plus number-button">+125</button>
+        <button id="plus-250-posession-button" class="plus number-button">+250</button>
+        <button id="plus-500-posession-button" class="plus number-button">+500</button>
+        <button id="minus-125-posession-button" class="minus number-button">-125</button>
+        <button id="minus-250-posession-button" class="minus number-button">-250</button>
+        <button id="minus-500-posession-button" class="minus number-button">-500</button>
+    </div>
+    <div class="mt-8">
+        <button id="plus-1-role-button" class="plus number-button">+1</button>
+        <button id="plus-5-role-button" class="plus number-button">+5</button>
+        <button id="plus-10-role-button" class="plus number-button">+10</button>
+        <button id="minus-1-role-button" class="minus number-button">-1</button>
+        <button id="minus-5-role-button" class="minus number-button">-5</button>
+        <button id="minus-10-role-button" class="minus number-button">-10</button>
+    </div>
+    <div class="mt-8">
+        <button id="plus-1-over-button" class="plus number-button">+1</button>
+        <button id="minus-1-over-button" class="minus number-button">-1</button>
+    </div>
     <div class="mt-8">
         <button id="start-button">Start</button>
         <button id="end-button">End</button>
